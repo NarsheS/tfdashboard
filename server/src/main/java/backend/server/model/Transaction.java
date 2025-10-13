@@ -8,10 +8,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 @Entity
+@Table(name = "transactions")
 public class Transaction {
 
     @Id
@@ -21,10 +23,10 @@ public class Transaction {
     @Size(max = 500, message = "O limite de caracteres é de 500")
     private String description;
 
-    @NotBlank(message = "Informe o valor")
-    private Double value;
+    @NotNull(message = "Informe o valor")
+    private Double amount;
 
-    @NotBlank(message = "Informe a Data")
+    @NotNull(message = "Informe a Data")
     private LocalDate date;
 
     @ManyToOne
@@ -44,12 +46,12 @@ public class Transaction {
         this.description = description;
     }
 
-    public Double getValue(){
-        return value;
+    public Double getAmount(){
+        return amount;
     }
 
-    public void setValue(Double value){
-        this.value = value;
+    public void setAmount(Double amount){
+        this.amount = amount;
     }
 
     public LocalDate getDate(){
