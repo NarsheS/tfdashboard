@@ -13,6 +13,7 @@ import backend.server.model.Transaction;
 import backend.server.model.User;
 import backend.server.repository.TransactionRepository;
 import backend.server.repository.UserRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/transactions")
@@ -26,8 +27,9 @@ public class TransactionController {
         this.userRepo = userRepo;
     }
 
+    // Informações sendo passadas por URL tenho que corrigir isso com auth
     @PostMapping("/{userId}")
-    public Transaction add(@PathVariable Long userId, @RequestBody Transaction transaction) {
+    public Transaction add(@PathVariable Long userId, @Valid @RequestBody Transaction transaction) {
         User user = userRepo.findById(userId).orElseThrow();
         user.addTransaction(transaction);
         userRepo.save(user); // cascade saves transaction

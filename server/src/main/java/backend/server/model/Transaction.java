@@ -8,6 +8,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 public class Transaction {
@@ -16,9 +18,13 @@ public class Transaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String type; // "gasto" ou "ganho"
+    @Size(max = 500, message = "O limite de caracteres é de 500")
     private String description;
+
+    @NotBlank(message = "Informe o valor")
     private Double value;
+
+    @NotBlank(message = "Informe a Data")
     private LocalDate date;
 
     @ManyToOne
@@ -28,14 +34,6 @@ public class Transaction {
     // Getters e Setters
     public Long getId(){
         return id;
-    }
-
-    public String getType(){
-        return type;
-    }
-
-    public void setType(String type){
-        this.type = type;
     }
 
     public String getDescription(){

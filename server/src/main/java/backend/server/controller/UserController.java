@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import backend.server.model.User;
 import backend.server.repository.UserRepository;
+import jakarta.validation.Valid;
 
 @RestController
 @RequestMapping("/users")
@@ -21,12 +22,12 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
+    public User register(@Valid @RequestBody User user) {
         return userRepo.save(user);
     }
 
     @PostMapping("/login")
-    public String login(@RequestBody User user) {
+    public String login(@Valid @RequestBody User user) {
         Optional<User> found = userRepo.findByEmail(user.getEmail());
 
         if (found.isPresent() && found.get().getPassword().equals(user.getPassword())) {
