@@ -4,21 +4,36 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
+// Cria o DB
 @Entity
 public class User {
+    // Classe com ID, nome, email e senha.
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Definindo identificador
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Gerar numero automaticamente
     private Long id;
 
+    @NotBlank(message = "Informar nome")
+    @Size(max = 100, message = "Seu nome não pode ser maior que 100 caracteres")
     private String name;
+
+    @Column(unique = true)
+    @Email
+    @NotBlank(message = "Cadastre o Email")
     private String email;
+
+    @NotBlank(message = "Cadastre a Senha")
+    @Size(min = 8, max = 50, message = "A senha deve ter no mínimo 8 caracteres")
     private String password;
 
     // this final List can give headache later
