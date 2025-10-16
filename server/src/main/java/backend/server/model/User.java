@@ -19,6 +19,7 @@ import jakarta.validation.constraints.Size;
 @Entity
 @Table(name = "users")
 public class User {
+    public User(){}
     // Classe com ID, nome, email e senha.
 
     @Id // Definindo identificador
@@ -35,12 +36,12 @@ public class User {
     private String email;
 
     @NotNull(message = "Cadastre a Senha")
-    @Size(min = 8, max = 50, message = "A senha deve ter no mínimo 8 caracteres")
+    @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
     private String password;
 
     // this final List can give headache later
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private final List<Transaction> transactions = new ArrayList<>();
+    private List<Transaction> transactions = new ArrayList<>();
 
     // Getters e Setters
     public Long getId(){

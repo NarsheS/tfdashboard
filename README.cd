@@ -1,2 +1,6 @@
 Seguinte:
-- Implementar sistema de Autenticação e tokens
+- Register funciona
+- Login tambem funciona
+- Get users funciona apenas com token, entao tem que logar primeiro
+
+- verificar transactions amanhã (tudo...)

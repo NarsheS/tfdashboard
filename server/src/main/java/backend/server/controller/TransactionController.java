@@ -2,8 +2,10 @@ package backend.server.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,19 +29,22 @@ public class TransactionController {
         this.userRepo = userRepo;
     }
 
-    // Informações sendo passadas por URL tenho que corrigir isso com auth
-    @PostMapping("/{userId}")
-    public Transaction add(@PathVariable Long userId, @Valid @RequestBody Transaction transaction) {
-        User user = userRepo.findById(userId).orElseThrow();
-        user.addTransaction(transaction);
-        userRepo.save(user); // cascade saves transaction
-        return transaction;
+    @GetMapping
+    public ResponseEntity<List<Transaction>> listAll(Authentication auth) {
+        String email = auth.getName();
+        User user = userRepo.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        List<Transaction> transactions = transactionRepo.findByUser(user);
+        return ResponseEntity.ok(transactions);
     }
 
-
-    @GetMapping("/{userId}")
-    public List<Transaction> listAll(@PathVariable Long userId) {
-        User user = userRepo.findById(userId).orElseThrow();
-        return transactionRepo.findByUser(user);
+    @PostMapping
+    public ResponseEntity<Transaction> add(@Valid @RequestBody Transaction transaction, Authentication auth) {
+        String email = auth.getName();
+        User user = userRepo.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+        transaction.setUser(user);
+        Transaction saved = transactionRepo.save(transaction);
+        return ResponseEntity.status(201).body(saved);
     }
 }
