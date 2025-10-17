@@ -2,5 +2,6 @@ Seguinte:
 - Register funciona
 - Login tambem funciona
 - Get users funciona apenas com token, entao tem que logar primeiro
+- .env configurado
 
 - verificar transactions amanhã (tudo...)
