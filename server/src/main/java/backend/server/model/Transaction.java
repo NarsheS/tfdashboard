@@ -12,12 +12,13 @@ import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-@Entity
+// Definindo entidade + criação de tabela
+@Entity 
 @Table(name = "transactions")
 public class Transaction {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id // Definindo ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Geração automática + auto-increment
     private Long id;
 
     @Size(max = 500, message = "O limite de caracteres é de 500")

@@ -15,15 +15,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
-// Cria o DB
+// Definindo entidade + criação de tabela
 @Entity
 @Table(name = "users")
 public class User {
     public User(){}
     // Classe com ID, nome, email e senha.
 
-    @Id // Definindo identificador
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Gerar numero automaticamente
+    @Id // Definindo ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Geração automática + auto-increment
     private Long id;
 
     @NotNull(message = "Informar nome")
