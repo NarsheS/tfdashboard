@@ -18,7 +18,7 @@ import backend.server.model.UserView;
 import backend.server.repository.UserRepository;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/users") // users endpoint
 public class UserController {
 
     private final UserRepository userRepo;
@@ -31,15 +31,17 @@ public class UserController {
         this.jwtUtil = jwtUtil;
     }
 
-    @GetMapping
+    @GetMapping // GET - retorna todos os usuários e informações - remover depois!!!
     public List<UserView> getAllUsers() {
         return userRepo.findAllProjectedBy();
     }
 
-    @PostMapping("/register")
+    @PostMapping("/register") // POST - registrar usuário
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
+            // Criptografa e define senha do usuário
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            // Tenta salvar o usuário com senha criptografada
             return ResponseEntity.ok(userRepo.save(user));
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Erro ao cadastrar usuário: " + e.getMessage());
@@ -47,20 +49,22 @@ public class UserController {
     }
 
 
-    @PostMapping("/login")
+    @PostMapping("/login") // POST - logar usuário
     public ResponseEntity<?> login(@RequestBody User user) {
         Optional<User> found = userRepo.findByEmail(user.getEmail());
 
+        // Se achar o email de usuário fornecido
         if (found.isPresent()) {
-            String rawPassword = user.getPassword();
-            String hashedPassword = found.get().getPassword();
+            String rawPassword = user.getPassword(); // senha fornecida no login
+            String hashedPassword = found.get().getPassword(); // senha criptografada do DB
 
+            // Se forem compativéis gera um token
             if (passwordEncoder.matches(rawPassword, hashedPassword)) {
                 String token = jwtUtil.generateToken(found.get().getEmail());
                 return ResponseEntity.ok(Collections.singletonMap("token", token));
             }
         }
-
+        // Se não o usuário não existir retorna 401
         return ResponseEntity.status(401).body("E-mail ou senha incorretos!");
     }
 }

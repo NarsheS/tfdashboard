@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import backend.server.model.User;
 import backend.server.repository.UserRepository;
 
+// Esse código também está definindo UserDetails por "padrão"
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 

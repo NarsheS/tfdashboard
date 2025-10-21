@@ -13,6 +13,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
+// Filtragem, faz com que só seja possível interagir com login ou token
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final UserDetailsService userDetailsService;
@@ -31,7 +32,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         String path = request.getServletPath();
 
-        // 🔹 Ignora endpoints públicos
+        // Ignora endpoints públicos
         if (path.startsWith("/users/register") || path.startsWith("/users/login") || path.equals("/error")) {
             filterChain.doFilter(request, response);
             return;
@@ -40,8 +41,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
 
         if (header != null && header.startsWith("Bearer ")) {
+            // Obtendo token e extraindo o email do usuário dele
             String token = header.substring(7);
-            String username = jwtUtil.extractUsername(token);
+            String username = jwtUtil.extractEmail(token);
 
             if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);

@@ -14,16 +14,17 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    private final Key secretKey;
+    private final Key secretKey; // key aleatória no arquivo .env
 
-    private static final long EXPIRATION_TIME = 604800000; // 7 dias em ms
+    private static final long EXPIRATION_TIME = 604800000; // Tempo de vida do token em ms (7 dias)
 
-    // Injeta o valor do application.properties
+    // jwt.secret pega o valor em application.properties que por sua vez pega do .env
     public JwtUtil(@Value("${jwt.secret}") String secret) {
         // Garante chave longa o suficiente para HS512
         this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
+    // Gera de token
     public String generateToken(String email) {
         return Jwts.builder()
                 .setSubject(email)
@@ -33,7 +34,8 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String extractUsername(String token) {
+    // Decodifica e pega o email do usuário dentro do token gerado
+    public String extractEmail(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(secretKey)
                 .build()
@@ -42,8 +44,9 @@ public class JwtUtil {
                 .getSubject();
     }
 
+    // pega o username e do token e compara
     public Boolean validateToken(String token, UserDetails userDetails) {
-        String username = extractUsername(token);
-        return username.equals(userDetails.getUsername());
+        String username = extractEmail(token); // Email como username pq n tem username no DB
+        return username.equals(userDetails.getUsername()); // Comparando
     }
 }
