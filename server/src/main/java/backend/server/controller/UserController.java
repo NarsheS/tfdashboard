@@ -6,10 +6,12 @@ import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -82,4 +84,44 @@ public class UserController {
         userRepo.delete(userOpt.get());
         return ResponseEntity.noContent().build(); // HTTP 204
     }
+
+    @PutMapping
+    public ResponseEntity<?> updateUser(@RequestBody User updatedUser, Authentication auth) {
+        // Obtém o e-mail do usuário autenticado (do token JWT)
+        String email = auth.getName();
+
+        User user = userRepo.findByEmail(email)
+            .orElseThrow(() -> new UsernameNotFoundException("Usuário não encontrado"));
+
+        boolean emailChanged = false;
+
+        // Atualiza nome, se informado
+        if (updatedUser.getName() != null && !updatedUser.getName().isBlank()) {
+            user.setName(updatedUser.getName());
+        }
+
+        // Atualiza senha, se informada
+        if (updatedUser.getPassword() != null && !updatedUser.getPassword().isBlank()) {
+            user.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
+        }
+
+        // Atualiza email, se for diferente
+        if (updatedUser.getEmail() != null && !updatedUser.getEmail().isBlank()
+                && !updatedUser.getEmail().equals(user.getEmail())) {
+            user.setEmail(updatedUser.getEmail());
+            emailChanged = true;
+        }
+
+        userRepo.save(user);
+
+        // Se o email mudou, gera novo token
+        if (emailChanged) {
+            String newToken = jwtUtil.generateToken(user.getEmail());
+            return ResponseEntity.ok(Collections.singletonMap("token", newToken));
+        }
+
+        // Apenas confirma a atualização
+        return ResponseEntity.ok(Collections.singletonMap("message", "Dados atualizados com sucesso"));
+    }
+
 }
