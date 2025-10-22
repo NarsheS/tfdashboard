@@ -29,7 +29,7 @@ public class TransactionController {
         this.userRepo = userRepo;
     }
 
-    @GetMapping
+    @GetMapping // Retorna todas as transações do usuário
     public ResponseEntity<List<Transaction>> listAll(Authentication auth) {
         String email = auth.getName();
         User user = userRepo.findByEmail(email)
@@ -38,7 +38,7 @@ public class TransactionController {
         return ResponseEntity.ok(transactions);
     }
 
-    @PostMapping
+    @PostMapping // Adiciona uma transação
     public ResponseEntity<Transaction> add(@Valid @RequestBody Transaction transaction, Authentication auth) {
         String email = auth.getName();
         User user = userRepo.findByEmail(email)

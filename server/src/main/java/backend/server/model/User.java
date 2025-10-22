@@ -40,7 +40,8 @@ public class User {
     private String password;
 
     // this final List can give headache later
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @com.fasterxml.jackson.annotation.JsonManagedReference // Corta o loop entre as tabelas (tem um em Transaction)
     private List<Transaction> transactions = new ArrayList<>();
 
     // Getters e Setters

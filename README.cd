@@ -3,5 +3,7 @@ Seguinte:
 - Login tambem funciona
 - Get users funciona apenas com token, entao tem que logar primeiro
 - .env configurado
+- cortei os loops
+- transactions funtiona
 
-- verificar transactions amanhã (tudo...)
+- adicionar metodos de deletar e atualizar

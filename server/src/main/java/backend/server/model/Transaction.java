@@ -1,5 +1,6 @@
 package backend.server.model;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import jakarta.persistence.Entity;
@@ -25,13 +26,14 @@ public class Transaction {
     private String description;
 
     @NotNull(message = "Informe o valor")
-    private Double amount;
+    private BigDecimal amount;
 
     @NotNull(message = "Informe a Data")
     private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
+    @com.fasterxml.jackson.annotation.JsonBackReference // Corta o loop entre tabelas (tem um em User)
     private User user;
 
     // Getters e Setters
@@ -47,11 +49,11 @@ public class Transaction {
         this.description = description;
     }
 
-    public Double getAmount(){
+    public BigDecimal getAmount(){
         return amount;
     }
 
-    public void setAmount(Double amount){
+    public void setAmount(BigDecimal amount){
         this.amount = amount;
     }
 
