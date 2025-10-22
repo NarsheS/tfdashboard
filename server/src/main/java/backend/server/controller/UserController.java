@@ -5,7 +5,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -66,5 +68,18 @@ public class UserController {
         }
         // Se não o usuário não existir retorna 401
         return ResponseEntity.status(401).body("E-mail ou senha incorretos!");
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteAccount(Authentication auth){
+        String email = auth.getName(); // Nosso nome é o email
+
+        Optional<User> userOpt = userRepo.findByEmail(email);
+        if(userOpt.isEmpty()){
+            return ResponseEntity.status(404).body("Usuário não encontrado!");
+        }
+
+        userRepo.delete(userOpt.get());
+        return ResponseEntity.noContent().build(); // HTTP 204
     }
 }
