@@ -1,9 +1,4 @@
 Seguinte:
-- Register funciona
-- Login tambem funciona
-- Get users funciona apenas com token, entao tem que logar primeiro
-- .env configurado
-- cortei os loops
-- transactions funtiona
+- não testei a mudança no .env para uma palavra secrete maior (fazer isso hoje)
 
-- adicionar metodos de deletar e atualizar
+- adicionar metodos de deletar e atualizar para transactions
