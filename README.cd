@@ -1,4 +1,4 @@
 Seguinte:
 - não testei a mudança no .env para uma palavra secrete maior (fazer isso hoje)
 
-- adicionar metodos de deletar e atualizar para transactions
+- testar o server, começar o frontend
